@@ -1,0 +1,162 @@
+Training with maxDepth=3, maxIter=80, stepSize=0.01
+→ RMSE: 7.044443533106639
+Training with maxDepth=3, maxIter=80, stepSize=0.03
+→ RMSE: 6.796006513943829
+Training with maxDepth=3, maxIter=80, stepSize=0.05
+→ RMSE: 6.67254936172566
+Training with maxDepth=3, maxIter=80, stepSize=0.07
+→ RMSE: 6.620398698101067
+Training with maxDepth=3, maxIter=80, stepSize=0.1
+→ RMSE: 6.567977020971484
+Training with maxDepth=3, maxIter=100, stepSize=0.01
+→ RMSE: 6.995479912839473
+Training with maxDepth=3, maxIter=100, stepSize=0.03
+→ RMSE: 6.738508470003202
+Training with maxDepth=3, maxIter=100, stepSize=0.05
+→ RMSE: 6.642356242195222
+Training with maxDepth=3, maxIter=100, stepSize=0.07
+→ RMSE: 6.586881690203435
+Training with maxDepth=3, maxIter=100, stepSize=0.1
+→ RMSE: 6.530342251066444
+Training with maxDepth=3, maxIter=120, stepSize=0.01
+→ RMSE: 6.95454997631008
+Training with maxDepth=3, maxIter=120, stepSize=0.03
+→ RMSE: 6.698149319223791
+Training with maxDepth=3, maxIter=120, stepSize=0.05
+→ RMSE: 6.616266934437029
+Training with maxDepth=3, maxIter=120, stepSize=0.07
+→ RMSE: 6.567389009732408
+Training with maxDepth=3, maxIter=120, stepSize=0.1
+→ RMSE: 6.517980849117157
+Training with maxDepth=3, maxIter=150, stepSize=0.01
+→ RMSE: 6.90762598285763
+Training with maxDepth=3, maxIter=150, stepSize=0.03
+→ RMSE: 6.65757097234862
+Training with maxDepth=3, maxIter=150, stepSize=0.05
+→ RMSE: 6.574678811219184
+Training with maxDepth=3, maxIter=150, stepSize=0.07
+→ RMSE: 6.546330251483204
+Training with maxDepth=3, maxIter=150, stepSize=0.1
+→ RMSE: 6.5128439124663124
+Training with maxDepth=4, maxIter=80, stepSize=0.01
+→ RMSE: 6.901044634182301
+Training with maxDepth=4, maxIter=80, stepSize=0.03
+→ RMSE: 6.702467686023069
+Training with maxDepth=4, maxIter=80, stepSize=0.05
+→ RMSE: 6.665544167310106
+Training with maxDepth=4, maxIter=80, stepSize=0.07
+→ RMSE: 6.625763611988972
+Training with maxDepth=4, maxIter=80, stepSize=0.1
+→ RMSE: 6.636794212659664
+Training with maxDepth=4, maxIter=100, stepSize=0.01
+→ RMSE: 6.870894177311386
+Training with maxDepth=4, maxIter=100, stepSize=0.03
+→ RMSE: 6.68644786180966
+Training with maxDepth=4, maxIter=100, stepSize=0.05
+→ RMSE: 6.636863500625717
+Training with maxDepth=4, maxIter=100, stepSize=0.07
+→ RMSE: 6.607547165666234
+Training with maxDepth=4, maxIter=100, stepSize=0.1
+→ RMSE: 6.638015901324408
+Training with maxDepth=4, maxIter=120, stepSize=0.01
+→ RMSE: 6.839772573590065
+Training with maxDepth=4, maxIter=120, stepSize=0.03
+→ RMSE: 6.669919235661972
+Training with maxDepth=4, maxIter=120, stepSize=0.05
+→ RMSE: 6.619090989718708
+Training with maxDepth=4, maxIter=120, stepSize=0.07
+→ RMSE: 6.592455356450416
+Training with maxDepth=4, maxIter=120, stepSize=0.1
+→ RMSE: 6.63826448277945
+Training with maxDepth=4, maxIter=150, stepSize=0.01
+→ RMSE: 6.787594244250267
+Training with maxDepth=4, maxIter=150, stepSize=0.03
+→ RMSE: 6.651375897129719
+Training with maxDepth=4, maxIter=150, stepSize=0.05
+→ RMSE: 6.596985475677262
+Training with maxDepth=4, maxIter=150, stepSize=0.07
+→ RMSE: 6.585685787614481
+Training with maxDepth=4, maxIter=150, stepSize=0.1
+→ RMSE: 6.588304329939328
+Training with maxDepth=5, maxIter=80, stepSize=0.01
+→ RMSE: 6.891590473136697
+Training with maxDepth=5, maxIter=80, stepSize=0.03
+→ RMSE: 6.817273093325148
+Training with maxDepth=5, maxIter=80, stepSize=0.05
+→ RMSE: 6.766836385204682
+Training with maxDepth=5, maxIter=80, stepSize=0.07
+→ RMSE: 6.7992796570937415
+Training with maxDepth=5, maxIter=80, stepSize=0.1
+→ RMSE: 6.830317302728142
+Training with maxDepth=5, maxIter=100, stepSize=0.01
+→ RMSE: 6.87175197312634
+Training with maxDepth=5, maxIter=100, stepSize=0.03
+→ RMSE: 6.799330202643618
+Training with maxDepth=5, maxIter=100, stepSize=0.05
+→ RMSE: 6.774795272405061
+Training with maxDepth=5, maxIter=100, stepSize=0.07
+→ RMSE: 6.768999876925564
+Training with maxDepth=5, maxIter=100, stepSize=0.1
+→ RMSE: 6.83429939395515
+Training with maxDepth=5, maxIter=120, stepSize=0.01
+→ RMSE: 6.853771988594495
+Training with maxDepth=5, maxIter=120, stepSize=0.03
+→ RMSE: 6.78095897259992
+Training with maxDepth=5, maxIter=120, stepSize=0.05
+→ RMSE: 6.7981215170813885
+Training with maxDepth=5, maxIter=120, stepSize=0.07
+→ RMSE: 6.795088277312138
+Training with maxDepth=5, maxIter=120, stepSize=0.1
+→ RMSE: 6.859069586569738
+Training with maxDepth=5, maxIter=150, stepSize=0.01
+→ RMSE: 6.834108156150608
+Training with maxDepth=5, maxIter=150, stepSize=0.03
+→ RMSE: 6.796622150833152
+Training with maxDepth=5, maxIter=150, stepSize=0.05
+→ RMSE: 6.810772112276277
+Training with maxDepth=5, maxIter=150, stepSize=0.07
+→ RMSE: 6.814605786911905
+Training with maxDepth=5, maxIter=150, stepSize=0.1
+→ RMSE: 6.9634504150013505
+Training with maxDepth=6, maxIter=80, stepSize=0.01
+→ RMSE: 6.955438238429224
+Training with maxDepth=6, maxIter=80, stepSize=0.03
+→ RMSE: 6.9062191120992065
+Training with maxDepth=6, maxIter=80, stepSize=0.05
+→ RMSE: 6.944388915069126
+Training with maxDepth=6, maxIter=80, stepSize=0.07
+→ RMSE: 6.969688084822897
+Training with maxDepth=6, maxIter=80, stepSize=0.1
+→ RMSE: 7.103647457175963
+Training with maxDepth=6, maxIter=100, stepSize=0.01
+→ RMSE: 6.935467248836766
+Training with maxDepth=6, maxIter=100, stepSize=0.03
+→ RMSE: 6.898426089056083
+Training with maxDepth=6, maxIter=100, stepSize=0.05
+→ RMSE: 6.963361438001224
+Training with maxDepth=6, maxIter=100, stepSize=0.07
+→ RMSE: 7.018328817043185
+Training with maxDepth=6, maxIter=100, stepSize=0.1
+→ RMSE: 7.119395883162429
+Training with maxDepth=6, maxIter=120, stepSize=0.01
+→ RMSE: 6.921204033491606
+Training with maxDepth=6, maxIter=120, stepSize=0.03
+→ RMSE: 6.902496972796153
+Training with maxDepth=6, maxIter=120, stepSize=0.05
+→ RMSE: 6.954337586932427
+Training with maxDepth=6, maxIter=120, stepSize=0.07
+→ RMSE: 7.07586033507601
+Training with maxDepth=6, maxIter=120, stepSize=0.1
+→ RMSE: 7.180688335328054
+Training with maxDepth=6, maxIter=150, stepSize=0.01
+→ RMSE: 6.9112431047870135
+Training with maxDepth=6, maxIter=150, stepSize=0.03
+→ RMSE: 6.904652495944891
+Training with maxDepth=6, maxIter=150, stepSize=0.05
+→ RMSE: 7.010210978114018
+Training with maxDepth=6, maxIter=150, stepSize=0.07
+→ RMSE: 7.113224123118031
+Training with maxDepth=6, maxIter=150, stepSize=0.1
+→ RMSE: 7.197333643782017
+Best RMSE: 6.5128439124663124
+Best Params: maxDepth=3, maxIter=150, stepSize=0.1

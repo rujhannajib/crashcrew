@@ -30,7 +30,7 @@ from pyspark.ml import Pipeline
 spark = SparkSession.builder.appName("AccidentForecasting").getOrCreate()
 spark.sparkContext.setLogLevel("FATAL")
 
-df = spark.read.csv("cleaned_sampled_accident_data.csv", header=True, inferSchema=True)
+df = spark.read.csv("cleaned_accident_data.csv", header=True, inferSchema=True)
 
 
 # In[3]:
@@ -170,6 +170,10 @@ data = data.na.drop(subset=["lag_1", "lag_7"])
 train  = data.filter(col("Date") < "2021-01-01")
 valid  = data.filter((col("Date") >= "2021-01-01") & (col("Date") < "2022-01-01"))
 test   = data.filter(col("Date") >= "2022-01-01")
+
+# export test dataset for testing
+test.write.mode("overwrite").option("header", True).csv("cluster_test.csv")
+
 
 
 # In[15]:
