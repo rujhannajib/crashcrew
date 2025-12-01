@@ -34,37 +34,11 @@ try:
 except Exception as e:
     st.error(f"❌ Failed to load CSV: {e}")
 
-# --------------------------
-# Load Model
-# --------------------------
-st.subheader("🤖 Loading Trained GBT Model")
+st.subheader("Accident Count: Train | Test | Validation Split")
+st.image("forecast_split_plot.png")
 
-try:
-    loaded_model = PipelineModel.load("cluster_models/best_gbt_model")
-    st.success("Model successfully loaded.")
-except Exception as e:
-    st.error(f"❌ Failed to load model: {e}")
-
-# --------------------------
-# Run Prediction
-# --------------------------
-st.subheader("📊 Generating Predictions")
-
-predictions = loaded_model.transform(tf)
-
-# Evaluate RMSE
-evaluator_rmse = RegressionEvaluator(
-    labelCol="Accident_Count",
-    predictionCol="prediction",
-    metricName="rmse"
-)
-
-test_rmse = evaluator_rmse.evaluate(predictions)
-st.metric("RMSE", f"{test_rmse:.4f}")
-
-pdf = predictions.select("Date", "Accident_Count", "prediction").toPandas()
-
-st.dataframe(pdf)
+st.subheader("Accident Occurrence Forecast")
+st.image("cluster_forecast_test.png")
 
 
 
