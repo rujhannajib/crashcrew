@@ -1,17 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
-
-
-
-
 # In[1]:
 
 
+# load libraries
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import to_timestamp, to_date, count, avg, dayofweek, month, when, col, lag, weekofyear, year, lit, quarter
+from pyspark.sql.functions import to_timestamp, to_date, count, avg, dayofweek, month, when, col, lag, weekofyear, year, lit, quarter, log1p
 from pyspark.sql.window import Window
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.regression import GBTRegressor
@@ -21,15 +16,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pyspark.ml.tuning import ParamGridBuilder, CrossValidator
 from pyspark.ml import Pipeline
+from pyspark.sql import functions as F
 
 
 # In[2]:
 
 
-
+# configure spark session
 spark = SparkSession.builder.appName("AccidentForecasting").getOrCreate()
 spark.sparkContext.setLogLevel("FATAL")
 
+# load data
 df = spark.read.csv("cleaned_accident_data.csv", header=True, inferSchema=True)
 
 
@@ -41,28 +38,34 @@ df = spark.read.csv("cleaned_accident_data.csv", header=True, inferSchema=True)
 
 # In[4]:
 
+
 df = df.dropna()
-
-
-cols = ["ID", "Start_Time", "Severity", "City", "State", "Temperature(F)", "Humidity(%)", 
-        "Visibility(mi)", "Precipitation(in)", "Weather_Condition"]
-df = df.select(*cols)
 
 
 # In[5]:
 
 
-df = df.withColumn("Start_Time", to_timestamp("Start_Time"))
-df = df.withColumn("Date", to_date("Start_Time"))
+# feature selection
+cols = ["ID", "Start_Time", "Severity", "City", "State", "Temperature(F)", "Humidity(%)", 
+        "Visibility(mi)", "Precipitation(in)", "Weather_Condition"]
+df = df.select(*cols)
 
 
 # In[6]:
 
 
-# df.show(5)
+# date-time feature handling
+df = df.withColumn("Start_Time", to_timestamp("Start_Time"))
+df = df.withColumn("Date", to_date("Start_Time"))
 
 
 # In[7]:
+
+
+# df.show(5)
+
+
+# In[8]:
 
 
 daily_counts = (
@@ -84,13 +87,13 @@ weather_agg = (
 data = daily_counts.join(weather_agg, ["City", "Date"], "left")
 
 
-# In[8]:
+# In[9]:
 
 
 # data.show(5)
 
 
-# In[9]:
+# In[10]:
 
 
 # # Collect data from Spark to driver
@@ -111,7 +114,7 @@ data = daily_counts.join(weather_agg, ["City", "Date"], "left")
 # plt.show()
 
 
-# In[10]:
+# In[11]:
 
 
 data = data.withColumn("day_of_week", dayofweek("Date"))
@@ -120,7 +123,7 @@ data = data.withColumn("is_weekend", when(col("day_of_week").isin([1,7]), 1).oth
 data = data.withColumn("quarter", quarter("Date"))
 
 
-# In[11]:
+# In[12]:
 
 
 # year_selected = 2022
@@ -148,103 +151,103 @@ data = data.withColumn("quarter", quarter("Date"))
 # plt.show()
 
 
-# In[12]:
+# In[13]:
 
 
 windowSpec = Window.partitionBy("City").orderBy("Date")
 
+# create lag features of accident_count for time-series forecasting
 data = data.withColumn("lag_1", lag("Accident_Count", 1).over(windowSpec))
 data = data.withColumn("lag_7", lag("Accident_Count", 7).over(windowSpec))
 data = data.na.drop(subset=["lag_1", "lag_7"])
-
-
-# In[13]:
-
-
-# data.show(5)
+data = data.withColumn("Accident_Count_Log", log1p("Accident_Count")) # using log-transform to prevent negative value prediction
 
 
 # In[14]:
 
 
-train  = data.filter(col("Date") < "2021-01-01")
-valid  = data.filter((col("Date") >= "2021-01-01") & (col("Date") < "2022-01-01"))
-test   = data.filter(col("Date") >= "2022-01-01")
-
-# export test dataset for testing
-test.write.mode("overwrite").option("header", True).csv("cluster_test.csv")
-
+# data.show(5)
 
 
 # In[15]:
 
 
-# # Collect to driver for all three splits
-# train_rows = (
-#     train.select("Date", "Accident_Count")
-#          .orderBy("Date")
-#          .collect()
-# )
-
-# valid_rows = (
-#     valid.select("Date", "Accident_Count")
-#          .orderBy("Date")
-#          .collect()
-# )
-
-# test_rows = (
-#     test.select("Date", "Accident_Count")
-#         .orderBy("Date")
-#         .collect()
-# )
-
-# # Convert to numpy arrays
-# train_dates = np.array([r["Date"] for r in train_rows], dtype='datetime64[D]')
-# train_counts = np.array([r["Accident_Count"] for r in train_rows], dtype=float)
-
-# valid_dates = np.array([r["Date"] for r in valid_rows], dtype='datetime64[D]')
-# valid_counts = np.array([r["Accident_Count"] for r in valid_rows], dtype=float)
-
-# test_dates = np.array([r["Date"] for r in test_rows], dtype='datetime64[D]')
-# test_counts = np.array([r["Accident_Count"] for r in test_rows], dtype=float)
-
-# # Plot
-# plt.figure(figsize=(14, 6))
-
-# plt.plot(train_dates, train_counts, label='Train Data', marker='o', linewidth=2)
-# plt.plot(valid_dates, valid_counts, label='Validation Data', marker='s', linewidth=2)
-# plt.plot(test_dates, test_counts, label='Test Data', marker='x', linewidth=2)
-
-# plt.title("Accident Count Over Time — Train / Validation / Test Split", fontsize=16)
-# plt.xlabel("Date", fontsize=13)
-# plt.ylabel("Accident Count", fontsize=13)
-# plt.legend(fontsize=12)
-
-# # Optional: split vertical markers
-# first_valid = np.min(valid_dates)
-# first_test = np.min(test_dates)
-
-# plt.axvline(first_valid, color='gray', linestyle='--', linewidth=1.5)
-# plt.axvline(first_test, color='gray', linestyle='--', linewidth=1.5)
-
-# plt.text(first_valid, max(train_counts)*0.95, " Start Validation", rotation=90, color='gray')
-# plt.text(first_test, max(train_counts)*0.95, " Start Test", rotation=90, color='gray')
-
-# plt.grid(True, linestyle='--', alpha=0.4)
-# plt.xticks(rotation=45)
-# plt.tight_layout()
-
-# plt.show()
+# data splitting
+train  = data.filter(col("Date") < "2021-01-01")
+valid  = data.filter((col("Date") >= "2021-01-01") & (col("Date") < "2022-01-01"))
+test   = data.filter(col("Date") >= "2022-01-01")
 
 
 # In[16]:
+
+
+# Collect to driver for all three splits
+train_rows = (
+    train.select("Date", "Accident_Count")
+         .orderBy("Date")
+         .collect()
+)
+
+valid_rows = (
+    valid.select("Date", "Accident_Count")
+         .orderBy("Date")
+         .collect()
+)
+
+test_rows = (
+    test.select("Date", "Accident_Count")
+        .orderBy("Date")
+        .collect()
+)
+
+# Convert to numpy arrays
+train_dates = np.array([r["Date"] for r in train_rows], dtype='datetime64[D]')
+train_counts = np.array([r["Accident_Count"] for r in train_rows], dtype=float)
+
+valid_dates = np.array([r["Date"] for r in valid_rows], dtype='datetime64[D]')
+valid_counts = np.array([r["Accident_Count"] for r in valid_rows], dtype=float)
+
+test_dates = np.array([r["Date"] for r in test_rows], dtype='datetime64[D]')
+test_counts = np.array([r["Accident_Count"] for r in test_rows], dtype=float)
+
+# Plot
+plt.figure(figsize=(14, 6))
+
+plt.plot(train_dates, train_counts, label='Train Data', marker='o', linewidth=2)
+plt.plot(valid_dates, valid_counts, label='Validation Data', marker='s', linewidth=2)
+plt.plot(test_dates, test_counts, label='Test Data', marker='x', linewidth=2)
+
+plt.title("Accident Count Over Time — Train / Validation / Test Split", fontsize=16)
+plt.xlabel("Date", fontsize=13)
+plt.ylabel("Accident Count", fontsize=13)
+plt.legend(fontsize=12)
+
+# Optional: split vertical markers
+first_valid = np.min(valid_dates)
+first_test = np.min(test_dates)
+
+plt.axvline(first_valid, color='gray', linestyle='--', linewidth=1.5)
+plt.axvline(first_test, color='gray', linestyle='--', linewidth=1.5)
+
+plt.text(first_valid, max(train_counts)*0.95, " Start Validation", rotation=90, color='gray')
+plt.text(first_test, max(train_counts)*0.95, " Start Test", rotation=90, color='gray')
+
+plt.grid(True, linestyle='--', alpha=0.4)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig("forecast_split_plot.png") 
+# plt.show()
+
+
+# In[17]:
+
 
 feature_cols = ["day_of_week", "month", "is_weekend", 
                 "Temp", "Humidity", "Visibility", "Precip", "Sever",
                 "lag_1", "lag_7", "quarter"]
 
 
-# In[17]:
+# In[18]:
 
 
 
@@ -254,23 +257,17 @@ assembler = VectorAssembler(inputCols=feature_cols, outputCol="features")
 
 gbt = GBTRegressor(
     featuresCol="features",
-    labelCol="Accident_Count",
+    labelCol="Accident_Count_Log",
     seed=42
 )
 
 pipeline = Pipeline(stages=[assembler, gbt])
 
-
-evaluator_rmse = RegressionEvaluator(
-    labelCol="Accident_Count",
-    predictionCol="prediction",
-    metricName="rmse"
-)
-
-
 # Example hyperparameter options
 log_messages = []
 
+
+# hyperparameter fine-tuning
 maxDepths = [3, 4, 5, 6]
 maxIters = [80, 100, 120, 150]
 stepSizes = [0.01, 0.03, 0.05, 0.07, 0.1]
@@ -283,7 +280,7 @@ for depth in maxDepths:
     for it in maxIters:
         for step in stepSizes:
             msg = f"Training with maxDepth={depth}, maxIter={it}, stepSize={step}"
-            print(msg); log_messages.append(msg)
+            log_messages.append(msg)
 
             # Update GBT parameters
             gbt.setParams(maxDepth=depth, maxIter=it, stepSize=step)
@@ -291,12 +288,17 @@ for depth in maxDepths:
             # Train
             model = pipeline.fit(train)
 
-            # Validate
+            # Evaluate on validation (log scale only)
             predictions = model.transform(valid)
-            rmse = evaluator_rmse.evaluate(predictions)
+
+            rmse = RegressionEvaluator(
+                labelCol="Accident_Count_Log",
+                predictionCol="prediction",
+                metricName="rmse"
+            ).evaluate(predictions)
 
             msg = f"→ RMSE: {rmse}"
-            print(msg); log_messages.append(msg)
+            log_messages.append(msg)
 
             if rmse < best_rmse:
                 best_rmse = rmse
@@ -308,12 +310,9 @@ summary = (
     f"Best Params: maxDepth={best_params[0]}, "
     f"maxIter={best_params[1]}, stepSize={best_params[2]}"
 )
+
 # print(summary)
 log_messages.append(summary)
-
-# Write log to cluster output
-sc = spark.sparkContext
-sc.parallelize(log_messages, 1).saveAsTextFile("cluster_output/manual_hyperparam_log")
 
 # Save best model
 best_model.write().overwrite().save("cluster_models/best_gbt_model")
@@ -322,13 +321,10 @@ best_model.write().overwrite().save("cluster_models/best_gbt_model")
 
 
 
-# In[18]:
-
-
-
 # In[19]:
 
 
+# # get feature importances
 # gbt_stage = best_model.stages[1]
 
 # fi = gbt_stage.featureImportances
@@ -336,32 +332,92 @@ best_model.write().overwrite().save("cluster_models/best_gbt_model")
 # pd.DataFrame({"Feature": features, "Importance": fi.toArray()}).sort_values(by="Importance", ascending=False)
 
 
-# # In[20]:
+# In[20]:
 
 
-# pdf = predictions.toPandas().to_numpy()
+final_preds = best_model.transform(test)
 
-# # Extract columns by position
-# dates = pdf[:, 1]                 # column 1 = Date
-# actual = pdf[:, 2].astype(float)  # column 2 = Accident_Count (convert to float)
-# predicted = pdf[:, -1].astype(float)  # last column = prediction
+# Reverse log only AFTER model selection
+final_preds = final_preds.withColumn(
+    "predicted_count",
+    F.expm1("prediction")   # undo log1p
+)
 
-# # Optional: sort by date to ensure the line plot is continuous
-# sort_idx = np.argsort(dates)
-# dates = np.array(dates)[sort_idx]
-# actual = actual[sort_idx]
-# predicted = predicted[sort_idx]
+# -------------------------------
+# 2. Evaluate on LOG SCALE
+# -------------------------------
+evaluator_log = RegressionEvaluator(
+    labelCol="Accident_Count_Log",
+    predictionCol="prediction",
+    metricName="rmse"
+)
 
-# # Plot
-# plt.figure(figsize=(10, 5))
-# plt.plot(dates, actual, label='Actual', marker='o')
-# plt.plot(dates, predicted, label='Predicted', linestyle='--', marker='x')
-# plt.xlabel('Date')
-# plt.ylabel('Accident Count')
-# plt.title('Accident Occurrence Forecast')
-# plt.legend()
-# plt.xticks(rotation=45)
-# plt.tight_layout()
+test_rmse = evaluator_log.evaluate(final_preds)
+
+print(f"LOG RMSE on testing data: {test_rmse}")
+log_messages.append(f"LOG RMSE on testing data: {test_rmse}")
+
+# -------------------------------
+# 3. Write log to cluster output
+# -------------------------------
+sc = spark.sparkContext
+sc.parallelize(log_messages, 1).saveAsTextFile("cluster_output/manual_hyperparam_log")
+
+# -------------------------------
+# 4. Add rounded prediction
+# -------------------------------
+final_preds = final_preds.withColumn(
+    "predicted_count_rounded",
+    F.when(F.round("predicted_count") < 0, 0)
+     .otherwise(F.round("predicted_count"))
+     .cast("integer")
+)
+
+# -------------------------------
+# 5. Convert to Pandas
+# -------------------------------
+pdf = final_preds.toPandas()
+
+# -------------------------------
+# 6. FIX: Ensure Date column is 1-D
+# -------------------------------
+def flatten(x):
+    if isinstance(x, (list, tuple, np.ndarray)):
+        return x[0]
+    return x
+
+pdf["Date"] = pdf["Date"].apply(flatten)
+
+# -------------------------------
+# 7. Extract columns
+# -------------------------------
+dates = pd.to_datetime(pdf["Date"]).to_numpy()
+actual = pdf["Accident_Count"].astype(float).to_numpy()
+predicted = pdf["predicted_count_rounded"].astype(float).to_numpy()
+
+# -------------------------------
+# 8. Sort by date
+# -------------------------------
+sort_idx = np.argsort(dates)
+dates = dates[sort_idx]
+actual = actual[sort_idx]
+predicted = predicted[sort_idx]
+
+# -------------------------------
+# 9. Plot
+# -------------------------------
+plt.figure(figsize=(16, 8))
+plt.plot(dates, actual, label='Actual', marker='o', markersize=5)
+plt.plot(dates, predicted, label='Predicted', linestyle='--', marker='x', markersize=5)
+plt.xlabel('Date')
+plt.ylabel('Accident Count')
+plt.title('Accident Occurrence Forecast')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig("cluster_forecast_test.png")
+
 # plt.show()
 
 
@@ -369,4 +425,10 @@ best_model.write().overwrite().save("cluster_models/best_gbt_model")
 
 
 spark.stop()
+
+
+# In[ ]:
+
+
+
 
