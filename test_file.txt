@@ -1,0 +1,4 @@
+idea for severity_prediction:
+- severity / state
+- severity / time
+- matrix of actual severity + predicted severity
