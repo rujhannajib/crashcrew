@@ -343,9 +343,9 @@ final_preds = final_preds.withColumn(
     F.expm1("prediction")   # undo log1p
 )
 
-# -------------------------------
-# 2. Evaluate on LOG SCALE
-# -------------------------------
+
+# Evaluate on LOG SCALE
+
 evaluator_log = RegressionEvaluator(
     labelCol="Accident_Count_Log",
     predictionCol="prediction",
@@ -357,15 +357,15 @@ test_rmse = evaluator_log.evaluate(final_preds)
 print(f"LOG RMSE on testing data: {test_rmse}")
 log_messages.append(f"LOG RMSE on testing data: {test_rmse}")
 
-# -------------------------------
-# 3. Write log to cluster output
-# -------------------------------
+
+# Write log to cluster output
+
 sc = spark.sparkContext
 sc.parallelize(log_messages, 1).saveAsTextFile("cluster_output/manual_hyperparam_log")
 
-# -------------------------------
-# 4. Add rounded prediction
-# -------------------------------
+
+# Add rounded prediction
+
 final_preds = final_preds.withColumn(
     "predicted_count_rounded",
     F.when(F.round("predicted_count") < 0, 0)
@@ -373,14 +373,14 @@ final_preds = final_preds.withColumn(
      .cast("integer")
 )
 
-# -------------------------------
-# 5. Convert to Pandas
-# -------------------------------
+
+# Convert to Pandas
+
 pdf = final_preds.toPandas()
 
-# -------------------------------
-# 6. FIX: Ensure Date column is 1-D
-# -------------------------------
+
+# FIX: Ensure Date column is 1-D
+
 def flatten(x):
     if isinstance(x, (list, tuple, np.ndarray)):
         return x[0]
@@ -388,24 +388,24 @@ def flatten(x):
 
 pdf["Date"] = pdf["Date"].apply(flatten)
 
-# -------------------------------
-# 7. Extract columns
-# -------------------------------
+
+# Extract columns
+
 dates = pd.to_datetime(pdf["Date"]).to_numpy()
 actual = pdf["Accident_Count"].astype(float).to_numpy()
 predicted = pdf["predicted_count_rounded"].astype(float).to_numpy()
 
-# -------------------------------
-# 8. Sort by date
-# -------------------------------
+
+# Sort by date
+
 sort_idx = np.argsort(dates)
 dates = dates[sort_idx]
 actual = actual[sort_idx]
 predicted = predicted[sort_idx]
 
-# -------------------------------
-# 9. Plot
-# -------------------------------
+
+# Plot
+
 plt.figure(figsize=(16, 8))
 plt.plot(dates, actual, label='Actual', marker='o', markersize=5)
 plt.plot(dates, predicted, label='Predicted', linestyle='--', marker='x', markersize=5)
