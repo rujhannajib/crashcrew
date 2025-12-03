@@ -52,6 +52,11 @@ st.metric(label="Test LOG RMSE", value=f"{log_rmse:.6f}")
 st.subheader("Best Hyperparameters")
 st.json(best_params)
 
+# Load CSV (local file or cluster output)
+fi = pd.read_csv("cluster_feature_importances.csv")
+st.subheader("Best Feature Importances")
+st.dataframe(fi)  
+
 st.subheader("Accident Count: Train | Test | Validation Split")
 st.image("forecast_split_plot.png")
 
