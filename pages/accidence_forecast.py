@@ -33,6 +33,24 @@ try:
     st.dataframe(tf.limit(10).toPandas())
 except Exception as e:
     st.error(f"❌ Failed to load CSV: {e}")
+    
+st.title("📊 Model Evaluation Results")
+
+st.subheader("Best Model Performance")
+
+best_rmse = 0.46390491116724
+best_params = {
+    "maxDepth": 4,
+    "maxIter": 150,
+    "stepSize": 0.1
+}
+log_rmse = 0.4933598006142605
+
+st.metric(label="Best RMSE", value=f"{best_rmse:.6f}")
+st.metric(label="Test LOG RMSE", value=f"{log_rmse:.6f}")
+
+st.subheader("Best Hyperparameters")
+st.json(best_params)
 
 st.subheader("Accident Count: Train | Test | Validation Split")
 st.image("forecast_split_plot.png")
