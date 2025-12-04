@@ -218,7 +218,7 @@ plt.ylabel("Accident Count")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
-plt.savefig("cluster_accident_plot.png", dpi=300, bbox_inches='tight')
+plt.savefig("cluster_accident_per_hour_plot.png", dpi=300, bbox_inches='tight')
 #plt.show()
 
 
