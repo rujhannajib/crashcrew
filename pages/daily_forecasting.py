@@ -7,7 +7,7 @@ import numpy as np
 import altair as alt
 
 st.title("🚦 ML Models")
-st.header("📈 Accident Forecasting Model")
+st.header("📈 Daily Accident Forecasting Model")
 
 # --------------------------
 #  Cached Spark Session
