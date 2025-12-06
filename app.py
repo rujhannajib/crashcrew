@@ -9,6 +9,8 @@ st.title("🚦 Crashcrew Project")
 
 st.page_link("pages/daily_forecasting.py", label="Daily Forecasting", icon="📊")
 st.page_link("pages/hourly_forecasting.py", label="Hourly Forecasting", icon="🚨")
+st.page_link("pages/city_analytics.py", label="City Analytics", icon="🗽")
+st.page_link("pages/severity.py", label="Severity", icon="🚑")
 
 st.markdown("""
 ### 👥 Team Members  
@@ -24,6 +26,8 @@ st.markdown("""
 # -------------------------------
 hour_forecast = st.Page("pages/hourly_forecasting.py", title="Hourly Forecasting")
 daily_forecast = st.Page("pages/daily_forecasting.py", title="Daily Forecasting")
+daily_forecast = st.Page("pages/city_analytics.py", title="City Analytics")
+daily_forecast = st.Page("pages/severity.py", title="Severity")
 
 # -------------------------------
 # Objective Section
@@ -57,4 +61,16 @@ The dataset used in this project is available from Kaggle:
 
 🔗 **US Accidents (3.0 million records)**  
 https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents
+""")
+
+# -------------------------------
+# Source Code
+# -------------------------------
+st.subheader("💻 Source Code")
+
+st.markdown("""
+Source code can be found at:
+
+🔗 **Crashcrew Github Repository**  
+https://github.com/rujhannajib/crashcrew
 """)
