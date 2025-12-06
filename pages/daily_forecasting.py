@@ -36,7 +36,7 @@ st.subheader("Accident Count: Train | Test | Validation Split")
 st.image("forecast_split_plot.png")
 
 st.subheader("Accident Occurrence Forecast")
-st.image("cluster_forecast_test.png")
+st.image("cluster_dailyforecast_test.png")
 
 
 
