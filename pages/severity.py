@@ -14,6 +14,4 @@ st.image("cluster_accident_count_with_severity_3_per_hour.png")
 st.subheader("Accident Count with Severity 4 Per Hour")
 st.image("cluster_accident_count_with_severity_4_per_hour.png")
 
-st.subheader("Accident Duration Per Hour")
-st.image("duration_prediction.png")
 
