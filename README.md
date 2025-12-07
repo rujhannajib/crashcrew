@@ -157,6 +157,22 @@ Generated output:
 - clusterdailyforecast_test.png: Prediction result in PNG format
 - forecast_feature_importance.png: Output feature importance from cluster training
 
+# City-Level Accidence Forecasting
+
+Python file: accidence_forecasting_city_based.py
+
+Generated output:
+
+- cluster_models: pyspark model
+- cluster_output: hyperparameter tuning
+- cluster_test: test dataset exported
+- clusterdailyforecast_test.png: Prediction result in PNG format
+- forecast_feature_importance.png: Output feature importance from cluster training
+- city_cluster_weather_severity.png: Output cluster hotspot from K-Means Clustering
+- cluster_forecast_Houston.png: Prediction result in PNG for a sample city (Houston)
+- forecast_feature_importance.png: Output feature importance from cluster training but for the whole sample
+- top_cities_hotspots.png: Distribution of Accidents based on the US Cities
+
 ## 📚 References
 
 US Accidents Dataset:
