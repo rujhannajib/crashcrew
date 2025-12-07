@@ -12,7 +12,7 @@ Road accidents generate millions of records annually. Traditional tools struggle
 
 - **PySpark** (main framework)
 - **MLlib** for clustering & ML models
-- **Matplotlib/Seaborn** for visualization
+- **Matplotlib** for visualization
 - **Cluster setup:** 1–4 nodes (for scaling experiments)
 - **Streamlit:** Dashboard
 
@@ -35,47 +35,7 @@ Features include:
 - Engineer temporal, spatial, and environmental features
 - Run scalable clustering (e.g., k-means) to find accident hotspots
 - Perform forecasting/classification models (severity & accident counts)
-- Compare runtime across different cluster sizes
 - Generate visualizations (heatmaps, maps, cluster plots)
-
-## 🛠️ Pipeline
-
-1. **Data Ingestion**
-
-   - Load CSV → Spark DataFrames
-   - Handle missing or invalid fields
-
-2. **Feature Engineering**
-
-   - Temporal (hour, season), geospatial, weather features
-   - Partitioning strategies by state or time
-
-3. **Exploratory Analysis**
-
-   - Accident counts by state/year/hour
-   - Early density maps & distributions
-
-4. **Modeling**
-
-   - K-means clustering (hotspot detection)
-   - Severity prediction
-   - Daily accident forecasting
-
-5. **Scaling Experiments**
-
-   - Run models on 1, 2, and 4 nodes
-   - Measure runtime & memory usage
-
-6. **Visualization**
-   - Export results for plotting
-   - Produce heatmaps, geospatial cluster maps
-
-## 📈 Expected Deliverables
-
-- Clean & documented PySpark pipeline
-- Scalable ML models (clustering, forecasting, classification)
-- Visualizations & hotspot maps
-- Final report + presentation slides
 
 ## 👥 Team (Crash Crew)
 
@@ -94,11 +54,123 @@ Features include:
 
 - **Large dataset size** → use sampling during development
 - **Missing data** → define clear cleaning rules
-- **Visualization overhead** → focus on accuracy first
-- **Cluster limits** → optimize partitioning & caching strategy
+
+# 🖥️ How to Run the Project
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/rujhannajib/crashcrew.git
+```
+
+## 2. Activate the Environment
+
+Activate the .venv environment to run the webpage.
+
+### Windows (Command Prompt)
+
+```bash
+.venv\Scripts\activate.bat
+```
+
+### Windows (PowerShell)
+
+```
+.venv\Scripts\Activate.ps1
+```
+
+### macOS / Linux
+
+```
+source .venv/bin/activate
+```
+
+To run the Python files for each machine learning model, activate your Jupyter Notebook or your cluster’s Python environment.
+
+## 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## 4. Run Python Files on the Cluster
+
+Enter the cluster:
+
+```bash
+ssh your_id@psu.edu
+```
+
+Navigate to the project directory:
+
+```bash
+cd /path/to/project
+```
+
+Change the python file in standalone.sh. Configure appropriate information (CPU, nodes, ntask email)
+Submit the job:
+
+```bash
+sbatch standalone.sh
+```
+
+## 5. Running the frontend
+
+Run streamlit:
+
+```bash
+streamlit run app.py
+```
+
+## 6. Generate sampled data
+
+Upload the full dataset into project directory
+
+```bash
+#!/bin/bash
+curl -L -o ~/Downloads/us-accidents.zip\
+  https://www.kaggle.com/api/v1/datasets/download/sobhanmoosavi/us-accidents
+```
+
+To perform sampling on the huge dataset: run Sampling.ipynb
+
+# Webpage
+
+app.py: Streamlit entry file
+
+- pages/city_analytics.py: Accidence Analysis based on city
+- pages/city_cluster.py: Accidence Analysis based on city
+- pages/daily_forecasting.py: Daily forecasting analysis
+- pages/hourly_forecasting.py: Hourly forecasting analysis
+- pages/severity.py: Severity analysis
+
+# Daily Accidence Forecasting
+
+Jupyter Notebook: accidence_forecasting.ipynb
+Python file: accidence_forecasting.py
+
+Generated output:
+
+- cluster_models: pyspark model
+- cluster_output: hyperparameter tuning
+- cluster_test: test dataset exported
+- clusterdailyforecast_test.png: Prediction result in PNG format
+- forecast_feature_importance.png: Output feature importance from cluster training
 
 ## 📚 References
 
 US Accidents Dataset:
 
 - https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents
+
+Streamlit Documentation
+
+- https://docs.streamlit.io/
+
+Time Series Forecasting with XGBoost - Use python and machine learning to predict energy consumption
+
+- https://youtu.be/vV12dGe_Fho?si=-nzIc4qDapFDBkbL
+
+Project Presentation
+
+- https://psu.mediaspace.kaltura.com/media/My+Meeting/1_wii2c1vk​
